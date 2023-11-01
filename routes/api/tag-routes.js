@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
     if (tagDataById) {
       res.status(200).json(tagDataById);
     } else {
-      res.status(404).json(`There is no tag with this ID.`)
+      res.status(404).json(`The tag with id ${req.params.id} doesn't exist.`)
     }
   } catch (err) {
     res.status(500).json(err);
@@ -58,7 +58,7 @@ router.put('/:id', async (req, res) => {
     if (updateTag[0]) {
       res.status(200).json({ message: `The tag id ${req.params.id} was updated.` });
     } else {
-      res.status(404).json({ message: `There is no tag with this ID.` });
+      res.status(404).json({ message: `The tag with id ${req.params.id} doesn't exist.` });
     };
   } catch (err) {
     res.status(500).json(err);

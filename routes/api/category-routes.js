@@ -18,7 +18,7 @@ router.get('/:id', async (req, res) => {
     if (categoryDataById) {
       res.status(200).json(categoryDataById);
     } else {
-      res.status(404).json({ message: `There is no category with this ID.` });
+      res.status(404).json({ message: `The category with id ${req.params.id} doesn't exist.` });
     };
   } catch (err) {
     res.status(500).json(err);
@@ -44,7 +44,7 @@ router.put('/:id', async (req, res) => {
     if (updateCategory[0]) {
       res.status(200).json({ message: `The category id ${req.params.id} was updated.` });
     } else {
-      res.status(404).json({ message: `There is no category with this ID.` });
+      res.status(404).json({ message: `The category with id ${req.params.id} doesn't exist.` });
     };
   } catch (err) {
     res.status(500).json(err);
@@ -58,7 +58,11 @@ router.delete('/:id', async (req, res) => {
         id: req.params.id,
       },
     });
-    res.status(200).json({ message: `The category id ${req.params.id} was deleted.` });
+    if (deleteCategory) {
+      res.status(200).json({ message: `The category id ${req.params.id} was deleted.` });
+    } else {
+      res.status(404).json({ message: `The category with id ${req.params.id} doesn't exist.` });
+    }
   } catch (err) {
     res.status(500).json(err);
   }
