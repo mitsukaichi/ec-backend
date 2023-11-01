@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    // Add a process to check if the given tag exits in the database
     const tagDataById = await Tag.findByPk(
       req.params.id, {
         include: {
@@ -30,22 +29,58 @@ router.get('/:id', async (req, res) => {
     );
     if (tagDataById) {
       res.status(200).json(tagDataById);
+    } else {
+      res.status(404).json(`There is no tag with this ID.`)
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.post('/', async (req, res) => {
+  try {
+    const createNewTag = await Tag.bulkCreate([{
+      tag_name: req.body.name,
+    }]);
+    res.status(200).json(createNewTag);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  try {
+    const updateTag = await Tag.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (updateTag[0]) {
+      res.status(200).json({ message: `The tag id ${req.params.id} was updated.` });
+    } else {
+      res.status(404).json({ message: `There is no tag with this ID.` });
     };
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.post('/', (req, res) => {
-  // create a new tag
-});
-
-router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
-});
-
-router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+router.delete('/:id', async (req, res) => {
+  try {
+    const deleteTag = await Tag.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (deleteTag) {
+      res.status(200).json({message: `The tag id ${req.params.id} was deleted.` });
+    } else {
+      res.status(404).json({message: `The tag with id ${req.params.id} doesn't exist.` });
+    }
+    
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
